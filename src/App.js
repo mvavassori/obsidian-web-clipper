@@ -11,6 +11,10 @@ function App() {
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
   const [showRemoveLinkTooltip, setShowRemoveLinkTooltip] = useState(false);
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
+  const [showEditTitleIcon, setShowEditTitleIcon] = useState(false);
+
+  const [obsidianVault, setObsidianVault] = useState(null);
+  const [folderPath, setFolderPath] = useState(null);
 
   const titleInputRef = useRef();
   const textAreaRef = useRef();
@@ -63,12 +67,30 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    // Load the settings from browser storage
+    chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
+      if (result.obsidianVault) {
+        setObsidianVault(result.obsidianVault);
+      }
+      if (result.folderPath) {
+        setFolderPath(result.folderPath);
+      }
+    });
+  }, []);
+
   const handleRemoveLink = () => {
     setHeaderVisible(false);
   };
 
   const saveNote = async () => {
     if (!content && !headerVisible) return;
+
+    // Redirect to the options page if obsidianVault or folderPath is not set
+    if (!obsidianVault || !folderPath) {
+      chrome.runtime.openOptionsPage();
+      return;
+    }
 
     // Prepend the page link and an empty row to the content, if the header is visible
     const newContent = headerVisible
@@ -77,22 +99,21 @@ function App() {
         : pageInfo.url
       : content;
 
-    const obsidianVault = "Obsidian Vault"; //todo: save the vault name the user creates in extension options
-    const folderPath = "Web Notes"; //todo: save the folder path the user creates in extension options
+    // Replace {title} with the actual page title in the folderPath
+    const finalFolderPath = folderPath.replace("{title}", title);
 
     try {
       // Generate the Obsidian URI
       const obsidianUri = `obsidian://new?vault=${encodeURIComponent(
         obsidianVault
       )}&file=${encodeURIComponent(
-        folderPath + "/" + title
+        finalFolderPath
       )}&content=${encodeURIComponent(newContent)}`;
 
       // Open the URI in a new tab
       window.open(obsidianUri, "_blank");
       setTitle("");
       setContent("");
-      // window.close();
     } catch (error) {
       console.error("Error adding note: ", error);
     }
@@ -105,16 +126,19 @@ function App() {
     window.close();
   };
 
-  const logout = async () => {
-    try {
-      // await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
+  // Function to select all text in the input field
+  const selectAllText = () => {
+    titleInputRef.current.select();
   };
 
-  const websiteRedirect = () => {
-    chrome.tabs.create({ url: "http://localhost:3000/main" });
+  const donateRedirect = () => {
+    chrome.tabs.create({
+      url: "https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC",
+    });
+  };
+
+  const optionsRedirect = async () => {
+    chrome.runtime.openOptionsPage();
   };
 
   return (
@@ -132,39 +156,70 @@ function App() {
             onMouseEnter={() => setShowRemoveLinkTooltip(true)}
             onMouseLeave={() => setShowRemoveLinkTooltip(false)}
           >
-            {showRemoveLinkTooltip && (
-              <div className="absolute top-8 right-0 text-xs bg-zinc-700 text-white p-2 rounded whitespace-nowrap">
-                Remove page link
-              </div>
-            )}
             <svg
-              width="15"
-              height="15"
-              viewBox="0 0 15 15"
-              fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
             >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M4 3V0H5V3H4ZM9.31802 0.974873C9.94222 0.350672 10.7888 0 11.6716 0C13.5098 0 15 1.49019 15 3.32843C15 4.21118 14.6493 5.05778 14.0251 5.68198L10.8536 8.85355L10.1464 8.14645L13.318 4.97487C13.7547 4.53821 14 3.94596 14 3.32843C14 2.04247 12.9575 1 11.6716 1C11.054 1 10.4618 1.24532 10.0251 1.68198L6.85355 4.85355L6.14645 4.14645L9.31802 0.974873ZM0 4H3V5H0V4ZM10.8536 4.85355L4.85355 10.8536L4.14645 10.1464L10.1464 4.14645L10.8536 4.85355ZM4.85355 6.85355L1.68198 10.0251C1.24532 10.4618 1 11.054 1 11.6716C1 12.9575 2.04247 14 3.32843 14C3.94596 14 4.53821 13.7547 4.97487 13.318L8.14645 10.1464L8.85355 10.8536L5.68198 14.0251C5.05778 14.6493 4.21118 15 3.32843 15C1.49019 15 0 13.5098 0 11.6716C0 10.7888 0.350673 9.94222 0.974874 9.31802L4.14645 6.14645L4.85355 6.85355ZM15 11H12V10H15V11ZM10 15V12H11V15H10Z"
-                fill="black"
-              />
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              >
+                <path d="M14 11.998C14 9.506 11.683 7 8.857 7H7.143C4.303 7 2 9.238 2 11.998c0 2.378 1.71 4.368 4 4.873a5.3 5.3 0 0 0 1.143.124M16.857 7c.393 0 .775.043 1.143.124c2.29.505 4 2.495 4 4.874a4.92 4.92 0 0 1-1.634 3.653" />
+                <path d="M10 11.998c0 2.491 2.317 4.997 5.143 4.997M18 22.243l2.121-2.122m0 0L22.243 18m-2.122 2.121L18 18m2.121 2.121l2.122 2.122" />
+              </g>
             </svg>
           </button>
+          {showRemoveLinkTooltip && (
+            <div className="absolute top-8 right-0 text-xs bg-zinc-700 text-white p-2 rounded whitespace-nowrap z-10">
+              Remove page link
+            </div>
+          )}
         </div>
       )}
-      <input
-        ref={titleInputRef}
-        type="text"
-        name="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
-        placeholder="Add title"
-        autoComplete="no-autocomplete-please"
-        maxLength={100}
-      />
+      <div
+        className="relative flex items-center"
+        onMouseEnter={() => setShowEditTitleIcon(true)}
+        onMouseLeave={() => setShowEditTitleIcon(false)}
+      >
+        {showEditTitleIcon && (
+          <div className="absolute right-0 transform translate-y-[-50%] cursor-pointer top-5">
+            <button
+              onClick={selectAllText}
+              className="text-black rounded-full p-1 hover:bg-zinc-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6l4.25 4.25Z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+        <input
+          ref={titleInputRef}
+          type="text"
+          name="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
+          placeholder="Add title"
+          autoComplete="no-autocomplete-please"
+          maxLength={100}
+          onFocus={() => setShowEditTitleIcon(false)}
+          onBlur={() => setShowEditTitleIcon(true)}
+        />
+      </div>
       <TextareaAutosize
         ref={textAreaRef}
         value={content}
@@ -206,16 +261,16 @@ function App() {
               className="fixed bottom-11 left-1 bg-zinc-200 rounded-md shadow-lg"
             >
               <button
-                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 rounded-md"
-                onClick={logout}
+                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md"
+                onClick={optionsRedirect}
               >
-                Logout
+                Options
               </button>
               <button
-                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 rounded-md"
-                onClick={websiteRedirect}
+                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md"
+                onClick={donateRedirect}
               >
-                Go to Website
+                Donate
               </button>
             </div>
           )}
@@ -223,7 +278,7 @@ function App() {
         <div className="text-sm">
           <button
             ref={cancelButtonRef}
-            className="py-1 px-2 mr-2 bg-zinc-50 rounded hover:bg-zinc-200 font-semibold text-zinc-800"
+            className="py-1 px-2 mr-2 bg-zinc-50 rounded hover:bg-zinc-200 active:bg-zinc-300 font-semibold text-zinc-800"
             onClick={handleCancel}
           >
             Cancel
@@ -233,7 +288,7 @@ function App() {
             className={`py-1 px-2 bg-white rounded font-semibold  ${
               saveButtonDisabled
                 ? "opacity-50 cursor-not-allowed bg-zinc-50 hover:bg-zinc-50 text-zinc-800"
-                : "bg-zinc-50 hover:bg-violet-100 hover:text-violet-700"
+                : "bg-zinc-50 hover:bg-indigo-100 hover:text-indigo-700 active:bg-indigo-200"
             }`}
             onClick={saveNote}
             disabled={saveButtonDisabled}

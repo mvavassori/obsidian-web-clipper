@@ -8,6 +8,7 @@ const autoprefixer = require("autoprefixer");
 module.exports = {
   entry: {
     popup: "./src/index.js",
+    options: "./src/options.js",
   },
   output: {
     filename: "[name].js",
@@ -51,18 +52,24 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "popup.html",
+      chunks: ["popup"],
+    }),
+    new HtmlWebpackPlugin({
+      template: "./public/options.html",
+      filename: "options.html",
+      chunks: ["options"],
     }),
     new MiniCssExtractPlugin(),
     new CopyPlugin({
-      patterns: [{ from: "public", to: "." }],
+      // patterns: [{ from: "public", to: "." }],
+      patterns: [
+        { from: "public", to: ".", globOptions: { ignore: ["**/*.html"] } },
+      ],
     }),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
     port: 9000,
-    // headers: {
-    //   "Content-Security-Policy": "script-src 'self' https://apis.google.com",
-    // },
   },
 };

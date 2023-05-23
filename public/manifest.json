@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "My Obsidian Clipper",
+  "name": "Obsidian Web Clipper",
   "version": "1.0.0",
   "description": "A clipping extension to create notes in Obsidian.",
   "action": {
     "default_icon": "logo512.png",
     "default_popup": "popup.html"
   },
+  "options_page": "options.html",
   "permissions": ["activeTab", "storage"],
   "icons": {
     "48": "logo192.png"
