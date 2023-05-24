@@ -12,9 +12,11 @@ function App() {
   const [showRemoveLinkTooltip, setShowRemoveLinkTooltip] = useState(false);
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [showEditTitleIcon, setShowEditTitleIcon] = useState(false);
+  const [isTitleInFocus, setIsTitleInFocus] = useState(false);
 
   const [obsidianVault, setObsidianVault] = useState(null);
   const [folderPath, setFolderPath] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const titleInputRef = useRef();
   const textAreaRef = useRef();
@@ -26,7 +28,6 @@ function App() {
   const saveButtonRef = useRef(null);
   const hamburgerMenuButtonRef = useRef(null);
 
-  // Add useEffect hook to handle click events
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -49,7 +50,7 @@ function App() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
       setPageInfo({ title: tab.title, url: tab.url });
-      setTitle(tab.title); // Set the title state with the current page's title
+      setTitle(sanitizeTitle(tab.title));
     });
   }, []);
 
@@ -99,8 +100,10 @@ function App() {
         : pageInfo.url
       : content;
 
-    // Replace {title} with the actual page title in the folderPath
-    const finalFolderPath = folderPath.replace("{title}", title);
+    // Replace {title} with the sanitized page title in the folderPath
+    const sanitizedTitle = sanitizeTitle(title);
+    console.log(sanitizedTitle);
+    const finalFolderPath = folderPath.replace("{title}", sanitizedTitle);
 
     try {
       // Generate the Obsidian URI
@@ -126,9 +129,26 @@ function App() {
     window.close();
   };
 
-  // Function to select all text in the input field
-  const selectAllText = () => {
+  const selectAllInputText = () => {
     titleInputRef.current.select();
+    setShowEditTitleIcon(false);
+  };
+
+  const sanitizeTitle = (title) => {
+    const invalidCharacterPattern = /[\\:*?"<>|/]/g;
+    return title.replace(invalidCharacterPattern, "-");
+  };
+
+  const handleTitleChange = (e) => {
+    const sanitizedValue = sanitizeTitle(e.target.value);
+    if (sanitizedValue !== e.target.value) {
+      setErrorMsg(
+        'The title contains invalid characters. Please avoid using these characters in the title: \\ : * ? " < > | /'
+      );
+    } else {
+      setErrorMsg("");
+    }
+    setTitle(e.target.value);
   };
 
   const donateRedirect = () => {
@@ -151,7 +171,7 @@ function App() {
           <div className="text-xs p-2 truncate">{pageInfo.url}</div>
           <button
             ref={removeLinkButtonRef}
-            className="text-black rounded-full p-1 hover:bg-zinc-200 relative"
+            className="text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300 relative"
             onClick={handleRemoveLink}
             onMouseEnter={() => setShowRemoveLinkTooltip(true)}
             onMouseLeave={() => setShowRemoveLinkTooltip(false)}
@@ -183,14 +203,33 @@ function App() {
       )}
       <div
         className="relative flex items-center"
-        onMouseEnter={() => setShowEditTitleIcon(true)}
+        onMouseEnter={() => !isTitleInFocus && setShowEditTitleIcon(true)}
         onMouseLeave={() => setShowEditTitleIcon(false)}
       >
+        <input
+          ref={titleInputRef}
+          type="text"
+          name="title"
+          value={title}
+          onChange={handleTitleChange}
+          className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
+          placeholder="Add title"
+          autoComplete="no-autocomplete-please"
+          maxLength={50}
+          onFocus={() => {
+            setIsTitleInFocus(true);
+            setShowEditTitleIcon(false);
+          }}
+          onBlur={() => {
+            setIsTitleInFocus(false);
+            setShowEditTitleIcon(false);
+          }}
+        />
         {showEditTitleIcon && (
           <div className="absolute right-0 transform translate-y-[-50%] cursor-pointer top-5">
             <button
-              onClick={selectAllText}
-              className="text-black rounded-full p-1 hover:bg-zinc-200"
+              onClick={selectAllInputText}
+              className="text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -206,20 +245,12 @@ function App() {
             </button>
           </div>
         )}
-        <input
-          ref={titleInputRef}
-          type="text"
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
-          placeholder="Add title"
-          autoComplete="no-autocomplete-please"
-          maxLength={50}
-          onFocus={() => setShowEditTitleIcon(false)}
-          onBlur={() => setShowEditTitleIcon(true)}
-        />
       </div>
+      {errorMsg && (
+        <div className="text-red-500 text-xs m-2 p-0.5 rounded-md bg-zinc-100">
+          {errorMsg}
+        </div>
+      )}
       <TextareaAutosize
         ref={textAreaRef}
         value={content}
@@ -232,10 +263,9 @@ function App() {
       ></TextareaAutosize>
       <div className="flex justify-between w-full pr-2 pb-1 items-center">
         <div>
-          {/* Hamburger menu */}
           <button
             ref={hamburgerMenuButtonRef}
-            className={`p-1 rounded-full hover:bg-zinc-200 ${
+            className={`p-1 rounded-full hover:bg-zinc-200 active:bg-zinc-300 ${
               showHamburgerMenu ? "bg-zinc-200" : ""
             }`}
             onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
@@ -255,7 +285,6 @@ function App() {
               />
             </svg>
           </button>
-          {/* Popup menu */}
           {showHamburgerMenu && (
             <div
               ref={menuRef}
