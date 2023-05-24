@@ -45,6 +45,16 @@ In the project directory, you can run the following scripts:
 
 Please note that you will need to have Node.js and npm installed on your machine to run these commands.
 
+## Roadmap
+
+Here are some features and improvements that are planned for future updates of Obsidian Web Clipper:
+
+- [ ] **Support for Firefox:** Extend the availability of the extension to Firefox users, allowing them to benefit from the same note-taking capabilities within their preferred browser.
+
+- [ ] **Markdown Preview in Popup:** Enable a markdown preview feature directly within the extension popup, allowing users to preview the rendered markdown of their notes before saving them to their Obsidian vaults.
+
+Please note that the roadmap is subject to change and these features are not yet implemented. However, they represent the direction and potential enhancements for future versions of Obsidian Web Clipper.
+
 ## Support
 
 If you find it helpful and wish to support its development, consider making a [donation through PayPal](https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC).
