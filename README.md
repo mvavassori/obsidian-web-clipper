@@ -1,5 +1,7 @@
 # Obsidian Web Clipper
 
+![Logo of Obsidian Web Clipper](./public/logo128.png)
+
 ## Description
 
 Obsidian Web Clipper is a simple and convenient Chrome extension for users of [Obsidian](https://obsidian.md/), a popular note-taking application. With this extension, you can quickly capture notes directly from your web browser and save them to your Obsidian vaults.
@@ -46,7 +48,3 @@ Please note that you will need to have Node.js and npm installed on your machine
 ## Support
 
 If you find it helpful and wish to support its development, consider making a [donation through PayPal](https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC).
-
-## License
-
-This project is licensed under the terms of the MIT license. For more information, see the [LICENSE](LICENSE) file.
