@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# Obsidian Web Clipper
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+Obsidian Web Clipper is a simple and convenient Chrome extension for users of [Obsidian](https://obsidian.md/), a popular note-taking application. With this extension, you can quickly capture notes directly from your web browser and save them to your Obsidian vaults.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Efficient Note-Taking:** Click the extension icon to open a popup where you can jot down notes related to the current webpage.
+- **Customizable Titles:** The title of the note defaults to the webpage title, but can be easily edited.
+- **Page Link Tracking:** The link to the current webpage is automatically added at the top of the note content for reference. You can choose to remove this link if you prefer.
+- **Direct Obsidian Integration:** Define the Obsidian vault where your clippings will be saved. Specify the folder structure using `Folder Name/{title}` format, or simply use `{title}` to save the note with the title used in the extension popup.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Character Limits:** A maximum character limit of 50 characters for the note title and 1500 characters for the note content is enforced to ensure smooth handling with Obsidian URI.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore) (link to be provided upon publication).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Once installed, right-click the extension icon in the toolbar and select **Options** to specify your Obsidian vault name and desired note-saving format.
 
-### `npm run build`
+## For Developers
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This extension is built with React (version 18.2.0) and uses Webpack for bundling. Other notable dependencies include react-textarea-autosize for the note-taking textarea, and tailwindcss for styling.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Getting Started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To get a local copy up and running follow these simple steps:
 
-### `npm run eject`
+1. Clone the repository: `git clone https://github.com/mvavassori/obsidian-web-clipper.git`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Navigate to the project directory: `cd obsidian-web-clipper`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Install dependencies: `npm install`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Available Scripts
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+In the project directory, you can run the following scripts:
 
-## Learn More
+- `npm run dev`: Runs the webpack in the development mode. The bundle will be automatically rebuilt upon file changes.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `npm run build`: Runs the webpack in the production mode, creating a bundled output ready for distribution.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Please note that you will need to have Node.js and npm installed on your machine to run these commands.
 
-### Code Splitting
+## Support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+If you find it helpful and wish to support its development, consider making a [donation through PayPal](https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC).
 
-### Analyzing the Bundle Size
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the terms of the MIT license. For more information, see the [LICENSE](LICENSE) file.

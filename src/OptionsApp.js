@@ -139,23 +139,24 @@ const OptionsApp = () => {
         <label className="text-white text-lg">
           Clip Notes to{" "}
           <span className="text-gray-500 text-base">
-            ( Specify the folder where you'd like your notes to be saved, using
-            the format{" "}
+            ( Define the location for storing your notes by specifying the
+            folder path using the format{" "}
             <code className="bg-zinc-700 rounded-md px-0.5 text-gray-400">
               Folder Name/{"{title}"}
             </code>{" "}
-            or simply use{" "}
+            . Alternatively, simply use{" "}
             <code className="bg-zinc-700 rounded-md px-0.5 text-gray-400">
               {"{title}"}
             </code>{" "}
-            to set the page title as the note title. )
+            to save your notes directly with the same title as you input in the
+            extension popup. )
           </span>
         </label>
         <input
           required
           className="w-full px-4 py-2 mt-2 rounded-md bg-zinc-700 text-white text-lg"
           type="text"
-          placeholder="Folder Name/{title}"
+          placeholder="Browser Clippings/{title}"
           value={folder}
           onChange={(e) => setFolder(e.target.value)}
         />

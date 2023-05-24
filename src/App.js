@@ -137,7 +137,7 @@ function App() {
     });
   };
 
-  const optionsRedirect = async () => {
+  const optionsRedirect = () => {
     chrome.runtime.openOptionsPage();
   };
 
@@ -215,7 +215,7 @@ function App() {
           className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
           placeholder="Add title"
           autoComplete="no-autocomplete-please"
-          maxLength={100}
+          maxLength={50}
           onFocus={() => setShowEditTitleIcon(false)}
           onBlur={() => setShowEditTitleIcon(true)}
         />
@@ -228,6 +228,7 @@ function App() {
         placeholder="Take a brief note..."
         minRows={4}
         autoComplete="no-autocomplete-please"
+        maxLength={1500}
       ></TextareaAutosize>
       <div className="flex justify-between w-full pr-2 pb-1 items-center">
         <div>
