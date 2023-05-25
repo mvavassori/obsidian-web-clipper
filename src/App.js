@@ -47,14 +47,6 @@ function App() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  //     const tab = tabs[0];
-  //     setPageInfo({ title: tab.title, url: tab.url });
-  //     setTitle(sanitizeTitle(tab.title));
-  //   });
-  // }, []);
-
   useEffect(() => {
     if (title.trim() === "" && content.trim() === "" && !headerVisible) {
       setSaveButtonDisabled(true);
@@ -70,18 +62,6 @@ function App() {
       textAreaRef.current.focus();
     }
   }, []);
-
-  // useEffect(() => {
-  //   // Load the settings from browser storage
-  //   chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
-  //     if (result.obsidianVault) {
-  //       setObsidianVault(result.obsidianVault);
-  //     }
-  //     if (result.folderPath) {
-  //       setFolderPath(result.folderPath);
-  //     }
-  //   });
-  // }, []);
 
   useEffect(() => {
     const getPageInfo = async () => {
