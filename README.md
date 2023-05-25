@@ -4,7 +4,7 @@
 
 ## Description
 
-Obsidian Web Clipper is a simple and convenient Chrome extension for users of [Obsidian](https://obsidian.md/), a popular note-taking application. With this extension, you can quickly capture notes directly from your web browser and save them to your Obsidian vaults.
+Obsidian Web Clipper is a simple Chrome extension for users of [Obsidian](https://obsidian.md/), a popular note-taking application. With this extension, you can quickly capture notes directly from your web browser and save them to your Obsidian vaults.
 
 ## Features
 
