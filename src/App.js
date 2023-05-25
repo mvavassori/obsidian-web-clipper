@@ -17,6 +17,7 @@ function App() {
   const [obsidianVault, setObsidianVault] = useState(null);
   const [folderPath, setFolderPath] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const titleInputRef = useRef();
   const textAreaRef = useRef();
@@ -46,21 +47,23 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      setPageInfo({ title: tab.title, url: tab.url });
-      setTitle(sanitizeTitle(tab.title));
-    });
-  }, []);
+  // useEffect(() => {
+  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  //     const tab = tabs[0];
+  //     setPageInfo({ title: tab.title, url: tab.url });
+  //     setTitle(sanitizeTitle(tab.title));
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (title.trim() === "" && content.trim() === "" && !headerVisible) {
       setSaveButtonDisabled(true);
+    } else if (errorMsg) {
+      setSaveButtonDisabled(true);
     } else {
       setSaveButtonDisabled(false);
     }
-  }, [title, content, headerVisible]);
+  }, [title, content, headerVisible, errorMsg]);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -68,17 +71,70 @@ function App() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   // Load the settings from browser storage
+  //   chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
+  //     if (result.obsidianVault) {
+  //       setObsidianVault(result.obsidianVault);
+  //     }
+  //     if (result.folderPath) {
+  //       setFolderPath(result.folderPath);
+  //     }
+  //   });
+  // }, []);
+
   useEffect(() => {
-    // Load the settings from browser storage
-    chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
-      if (result.obsidianVault) {
-        setObsidianVault(result.obsidianVault);
+    const getPageInfo = async () => {
+      setLoading(true);
+      try {
+        const tabs = await new Promise((resolve) => {
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            resolve(tabs);
+          });
+        });
+        const tab = tabs[0];
+        setPageInfo({ title: tab.title, url: tab.url });
+        setTitle(sanitizeTitle(tab.title));
+      } catch (error) {
+        console.error("Error getting page info: ", error);
+      } finally {
+        setLoading(false);
       }
-      if (result.folderPath) {
-        setFolderPath(result.folderPath);
-      }
-    });
+    };
+
+    getPageInfo();
   }, []);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      setLoading(true);
+      try {
+        const result = await new Promise((resolve) => {
+          chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
+            resolve(result);
+          });
+        });
+        if (result.obsidianVault) {
+          setObsidianVault(result.obsidianVault);
+        }
+        if (result.folderPath) {
+          setFolderPath(result.folderPath);
+        }
+      } catch (error) {
+        console.error("Error loading settings: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  if (loading) {
+    <div className="h-44 flex items-center justify-center">
+      <div className="my-spinner w-5 h-5 border-t-2 border-zinc-700 border-solid rounded-full"></div>
+    </div>;
+  }
 
   const handleRemoveLink = () => {
     setHeaderVisible(false);
