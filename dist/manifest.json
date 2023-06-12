@@ -7,6 +7,9 @@
     "default_icon": "logo48.png",
     "default_popup": "popup.html"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "options_page": "options.html",
   "permissions": ["activeTab", "storage"],
   "icons": {

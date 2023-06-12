@@ -15,7 +15,7 @@ Obsidian Web Clipper is a simple Chrome extension for users of [Obsidian](https:
 
 ## Installation
 
-Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore) (link to be provided upon publication).
+Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/obsidian-web-clipper/akiokmdijehkppdjnfdhdgcoeehpbfgd) or the [Microsoft Edge Add-ons store](https://microsoftedge.microsoft.com/addons/detail/jgjacbgaegejdeiodlknbamdpmocmecg)
 
 Once installed, right-click the extension icon in the toolbar and select **Options** to specify your Obsidian vault name and desired note-saving format.
 

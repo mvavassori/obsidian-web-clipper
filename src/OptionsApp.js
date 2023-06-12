@@ -55,6 +55,9 @@ const OptionsApp = () => {
       },
       () => {
         // Optional: Show a success message or perform other actions
+        alert(
+          `Success!👌\n\nYour notes will be saved to the vault named "${vault}" using the format "${folder}".`
+        );
       }
     );
   };
