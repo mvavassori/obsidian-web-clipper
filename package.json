@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@postlight/parser": "^2.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "react-textarea-autosize": "^8.4.1"
+    "react-textarea-autosize": "^8.4.1",
+    "url": "^0.11.1"
   },
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",

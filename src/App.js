@@ -2,6 +2,7 @@
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import Parser from "@postlight/parser";
 
 function App() {
   const [pageInfo, setPageInfo] = useState({ title: "", url: "" });
@@ -197,6 +198,26 @@ function App() {
     chrome.runtime.openOptionsPage();
   };
 
+  // const handleSummarization = () => {
+  //   Parser.parse(pageInfo?.url).then((result) => console.log(result));
+  // };
+  const handleSummarization = () => {
+    Parser.parse(pageInfo?.url).then((result) => {
+      fetch("http://localhost:8000/summarize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: result.content }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  };
+
   return (
     <div
       ref={containerRef}
@@ -221,9 +242,9 @@ function App() {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
               >
                 <path d="M14 11.998C14 9.506 11.683 7 8.857 7H7.143C4.303 7 2 9.238 2 11.998c0 2.378 1.71 4.368 4 4.873a5.3 5.3 0 0 0 1.143.124M16.857 7c.393 0 .775.043 1.143.124c2.29.505 4 2.495 4 4.874a4.92 4.92 0 0 1-1.634 3.653" />
                 <path d="M10 11.998c0 2.491 2.317 4.997 5.143 4.997M18 22.243l2.121-2.122m0 0L22.243 18m-2.122 2.121L18 18m2.121 2.121l2.122 2.122" />
@@ -320,6 +341,12 @@ function App() {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
+          </button>
+          <button
+            className="text-sm py-1 px-2 bg-zinc-50 rounded hover:bg-zinc-200 active:bg-zinc-300 font-semibold text-zinc-800"
+            onClick={handleSummarization}
+          >
+            Summ
           </button>
           {showHamburgerMenu && (
             <div
