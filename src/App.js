@@ -14,6 +14,7 @@ function App() {
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [showEditTitleIcon, setShowEditTitleIcon] = useState(false);
   const [isTitleInFocus, setIsTitleInFocus] = useState(false);
+  // const [summary, setSummary] = useState("")
 
   const [obsidianVault, setObsidianVault] = useState(null);
   const [folderPath, setFolderPath] = useState(null);
@@ -198,24 +199,56 @@ function App() {
     chrome.runtime.openOptionsPage();
   };
 
-  // const handleSummarization = () => {
-  //   Parser.parse(pageInfo?.url).then((result) => console.log(result));
-  // };
-  const handleSummarization = () => {
-    Parser.parse(pageInfo?.url).then((result) => {
-      fetch("http://localhost:8000/summarize", {
+  const handleSummarization = async () => {
+    try {
+      const result = await Parser.parse(pageInfo?.url);
+      const response = await fetch("http://localhost:8000/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: result.content }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    });
+      });
+
+      let content = "";
+      const reader = response.body.getReader();
+      let decoder = new TextDecoder("utf-8");
+      let data = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        data += decoder.decode(value, { stream: !done });
+        if (done) break;
+
+        let lineEnd;
+        while ((lineEnd = data.indexOf("\n")) >= 0) {
+          let line = data.slice(0, lineEnd + 1);
+          data = data.slice(lineEnd + 1);
+          const chunkJson = JSON.parse(line);
+          content += chunkJson.chunk; // appending the chunk content to the existing content
+          setContent(content); // Update the content state with the chunk content
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleHtmlToText = async () => {
+    try {
+      const result = await Parser.parse(pageInfo?.url);
+      const response = await fetch("http://localhost:8000/htmltotext", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: result.content }),
+      });
+      const data = await response.json();
+      console.log("htmltotext", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -318,6 +351,7 @@ function App() {
         autoComplete="no-autocomplete-please"
         maxLength={1500}
       ></TextareaAutosize>
+
       <div className="flex justify-between w-full pr-2 pb-1 items-center">
         <div>
           <button
@@ -347,6 +381,12 @@ function App() {
             onClick={handleSummarization}
           >
             Summ
+          </button>
+          <button
+            className="text-sm py-1 px-2 bg-zinc-50 rounded hover:bg-zinc-200 active:bg-zinc-300 font-semibold text-zinc-800"
+            onClick={handleHtmlToText}
+          >
+            htmlToText
           </button>
           {showHamburgerMenu && (
             <div
