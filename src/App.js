@@ -14,7 +14,8 @@ function App() {
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [showEditTitleIcon, setShowEditTitleIcon] = useState(false);
   const [isTitleInFocus, setIsTitleInFocus] = useState(false);
-  // const [summary, setSummary] = useState("")
+  const [showSummaryIcon, setShowSummaryIcon] = useState(true);
+  const [showSummaryTooltip, setShowSummaryTooltip] = useState(false);
 
   const [obsidianVault, setObsidianVault] = useState(null);
   const [folderPath, setFolderPath] = useState(null);
@@ -189,6 +190,11 @@ function App() {
     setTitle(e.target.value);
   };
 
+  const handleContentTextarea = (e) => {
+    setContent(e.target.value);
+    setShowSummaryIcon(e.target.value.length === 0);
+  };
+
   const donateRedirect = () => {
     chrome.tabs.create({
       url: "https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC",
@@ -201,6 +207,7 @@ function App() {
 
   const handleSummarization = async () => {
     try {
+      setShowSummaryIcon(false);
       const result = await Parser.parse(pageInfo?.url);
       const response = await fetch("http://localhost:8000/summarize", {
         method: "POST",
@@ -229,23 +236,6 @@ function App() {
           setContent(content); // Update the content state with the chunk content
         }
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleHtmlToText = async () => {
-    try {
-      const result = await Parser.parse(pageInfo?.url);
-      const response = await fetch("http://localhost:8000/htmltotext", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: result.content }),
-      });
-      const data = await response.json();
-      console.log("htmltotext", data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -316,7 +306,7 @@ function App() {
           }}
         />
         {showEditTitleIcon && (
-          <div className="absolute right-0 transform translate-y-[-50%] cursor-pointer top-5">
+          <div className="absolute right-0.5 transform translate-y-[-50%] cursor-pointer top-5">
             <button
               onClick={selectAllInputText}
               className="text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300"
@@ -344,13 +334,40 @@ function App() {
       <TextareaAutosize
         ref={textAreaRef}
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={handleContentTextarea}
         className="w-full p-2 focus:border-none focus:ring-0 textarea-content resize-none font-semibold bg-zinc-50 text-sm"
         placeholder="Take a brief note..."
         minRows={4}
         autoComplete="no-autocomplete-please"
         maxLength={1500}
       ></TextareaAutosize>
+      {showSummaryIcon && (
+        <div>
+          <button
+            className="absolute right-0.5 top-20 text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300"
+            onClick={handleSummarization}
+            onMouseEnter={() => setShowSummaryTooltip(true)}
+            onMouseLeave={() => setShowSummaryTooltip(false)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M7.5 5.6L5 7l1.4-2.5L5 2l2.5 1.4L10 2L8.6 4.5L10 7L7.5 5.6m12 9.8L22 14l-1.4 2.5L22 19l-2.5-1.4L17 19l1.4-2.5L17 14l2.5 1.4M22 2l-1.4 2.5L22 7l-2.5-1.4L17 7l1.4-2.5L17 2l2.5 1.4L22 2m-8.66 10.78l2.44-2.44l-2.12-2.12l-2.44 2.44l2.12 2.12m1.03-5.49l2.34 2.34c.39.37.39 1.02 0 1.41L5.04 22.71c-.39.39-1.04.39-1.41 0l-2.34-2.34c-.39-.37-.39-1.02 0-1.41L12.96 7.29c.39-.39 1.04-.39 1.41 0Z"
+              />
+            </svg>
+          </button>
+          {showSummaryTooltip && (
+            <div className="absolute top-28 right-0 text-xs bg-zinc-700 text-white p-2 rounded whitespace-nowrap z-10">
+              Summarize page
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex justify-between w-full pr-2 pb-1 items-center">
         <div>
@@ -375,18 +392,6 @@ function App() {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-          </button>
-          <button
-            className="text-sm py-1 px-2 bg-zinc-50 rounded hover:bg-zinc-200 active:bg-zinc-300 font-semibold text-zinc-800"
-            onClick={handleSummarization}
-          >
-            Summ
-          </button>
-          <button
-            className="text-sm py-1 px-2 bg-zinc-50 rounded hover:bg-zinc-200 active:bg-zinc-300 font-semibold text-zinc-800"
-            onClick={handleHtmlToText}
-          >
-            htmlToText
           </button>
           {showHamburgerMenu && (
             <div
