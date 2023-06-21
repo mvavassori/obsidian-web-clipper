@@ -2,7 +2,7 @@
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import Parser from "@postlight/parser";
+// import Parser from "@postlight/parser";
 
 function App() {
   const [pageInfo, setPageInfo] = useState({ title: "", url: "" });
@@ -208,8 +208,11 @@ function App() {
   const handleSummarization = async () => {
     try {
       setShowSummaryIcon(false);
+      const ParserModule = await import("@postlight/parser");
+      const Parser = ParserModule.default || ParserModule;
+
       const result = await Parser.parse(pageInfo?.url);
-      const response = await fetch("http://localhost:8000/summarize", {
+      const response = await fetch("http://3.121.195.56:8000/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -342,9 +345,9 @@ function App() {
         maxLength={1500}
       ></TextareaAutosize>
       {showSummaryIcon && (
-        <div>
+        <div className="relative flex items-center">
           <button
-            className="absolute right-0.5 top-20 text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300"
+            className="absolute right-0.5 bottom-14 text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300 transform translate-y-[-50%]"
             onClick={handleSummarization}
             onMouseEnter={() => setShowSummaryTooltip(true)}
             onMouseLeave={() => setShowSummaryTooltip(false)}
@@ -362,7 +365,7 @@ function App() {
             </svg>
           </button>
           {showSummaryTooltip && (
-            <div className="absolute top-28 right-0 text-xs bg-zinc-700 text-white p-2 rounded whitespace-nowrap z-10">
+            <div className="absolute bottom-9 right-0 text-xs bg-zinc-700 text-white p-2 rounded whitespace-nowrap z-10">
               Summarize page
             </div>
           )}
