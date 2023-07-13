@@ -206,13 +206,15 @@ function App() {
   };
 
   const handleSummarization = async () => {
+    const developmentIp = "http://localhost:8000";
+    const productionIp = "http://3.121.195.56:8000";
     try {
       setShowSummaryIcon(false);
       const ParserModule = await import("@postlight/parser");
       const Parser = ParserModule.default || ParserModule;
 
       const result = await Parser.parse(pageInfo?.url);
-      const response = await fetch("http://3.121.195.56:8000/summarize", {
+      const response = await fetch(`${productionIp}/summarize`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -241,6 +243,24 @@ function App() {
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const handleContentPrinting = async () => {
+    if (!pageInfo?.url) {
+      console.log("No URL provided");
+      return;
+    }
+
+    try {
+      const ParserModule = await import("@postlight/parser");
+      const Parser = ParserModule.default || ParserModule;
+      const result = await Parser.parse(pageInfo.url);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(result.content, "text/html");
+      setContent(doc.body.textContent || "");
+    } catch (error) {
+      console.log("Error parsing the page:", error);
     }
   };
 
@@ -349,6 +369,7 @@ function App() {
           <button
             className="absolute right-0.5 bottom-14 text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300 transform translate-y-[-50%]"
             onClick={handleSummarization}
+            // onClick={handleContentPrinting}
             onMouseEnter={() => setShowSummaryTooltip(true)}
             onMouseLeave={() => setShowSummaryTooltip(false)}
           >
