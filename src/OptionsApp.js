@@ -121,7 +121,7 @@ const OptionsApp = () => {
 
   return (
     <div className="bg-zinc-800 px-32 py-8 min-h-screen">
-      <h1 className="text-6xl font-bold text-white">Obsidian Web Clipper bruh</h1>
+      <h1 className="text-6xl font-bold text-white">Obsidian Web Clipper</h1>
       <p className="text-gray-400 mt-8 text-xl">
         This is an unofficial web clipper for Obsidian that allows you to easily
         create notes within a popup and save them directly to your Obsidian
