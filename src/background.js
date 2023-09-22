@@ -1,7 +1,7 @@
-/* global chrome */
-chrome.runtime.onInstalled.addListener(function (details) {
+/* global browser */
+browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     // Redirect to the options page
-    chrome.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage();
   }
 });
