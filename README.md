@@ -15,7 +15,7 @@ Obsidian Web Clipper is a simple Chrome extension for users of [Obsidian](https:
 
 ## Installation
 
-Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/obsidian-web-clipper/akiokmdijehkppdjnfdhdgcoeehpbfgd) or the [Microsoft Edge Add-ons store](https://microsoftedge.microsoft.com/addons/detail/jgjacbgaegejdeiodlknbamdpmocmecg)
+Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/obsidian-web-clipper/akiokmdijehkppdjnfdhdgcoeehpbfgd), the [Microsoft Edge Add-ons store](https://microsoftedge.microsoft.com/addons/detail/jgjacbgaegejdeiodlknbamdpmocmecg) or the [Firefox Add-ons store](https://addons.mozilla.org/it/firefox/addon/obsidian-web-clipper-add-on/)
 
 Once installed, right-click the extension icon in the toolbar and select **Options** to specify your Obsidian vault name and desired note-saving format.
 
@@ -47,7 +47,7 @@ Please note that you will need to have Node.js and npm installed on your machine
 
 Here are some features and improvements that are planned for future updates of Obsidian Web Clipper:
 
-- [ ] **Support for Firefox:** Extend the availability of the extension to Firefox users, allowing them to benefit from the same note-taking capabilities within their preferred browser.
+- [x] **Support for Firefox:** Extend the availability of the extension to Firefox users, allowing them to benefit from the same note-taking capabilities within their preferred browser.
 
 - [ ] **Markdown Preview in Popup:** Enable a markdown preview feature directly within the extension popup, allowing users to preview the rendered markdown of their notes before saving them to their Obsidian vaults.
 
