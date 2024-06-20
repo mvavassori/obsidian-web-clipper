@@ -2,6 +2,7 @@
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { format } from 'date-fns';
 
 function App() {
   const [pageInfo, setPageInfo] = useState({ title: "", url: "" });
@@ -129,12 +130,16 @@ function App() {
       return;
     }
 
-    // Prepend the page link and an empty row to the content, if the header is visible
+    const now = new Date();
+    const formattedDate = format(now, 'yyyy-MM-dd HH:mm:ss');
+
+    // Prepend the page link and an empty row to the content along with note properties, if the header is visible.
+    // If the header is not visible, add the date as a property.
     const newContent = headerVisible
-      ? content
-        ? `${pageInfo.url}\n\n${content}`
-        : pageInfo.url
-      : content;
+        ? content
+            ? `---\nurl: ${pageInfo.url}\ndate: ${formattedDate}\n---\n\n${pageInfo.url}\n\n${content}`
+            : `---\nurl: ${pageInfo.url}\ndate: ${formattedDate}\n---\n\n${pageInfo.url}`
+        : `---\ndate: ${formattedDate}\n---\n\n${content}`;
 
     // Replace {title} with the sanitized page title in the folderPath
     const sanitizedTitle = sanitizeTitle(title);
