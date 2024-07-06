@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Obsidian Web Clipper",
+  "version": "0.1.4",
+  "description": "A clipping extension to create notes in Obsidian.",
+  "icons": {
+    "48": "logo48.png",
+    "128": "logo128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "48": "logo48.png",
+      "128": "logo128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": ["activeTab", "storage"],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "3728a58e-4fc4-47f0-8e78-02368b160b67@example.com"
+    }
+  }
+}

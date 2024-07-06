@@ -9,8 +9,10 @@
     "react-textarea-autosize": "^8.5.3"
   },
   "scripts": {
-    "dev": "webpack --watch --config webpack.dev.js",
-    "build": "webpack --config webpack.config.js"
+    "dev:chromium": "webpack --watch --env browser=chromium --config webpack.dev.js",
+    "dev:firefox": "webpack --watch --env browser=firefox --config webpack.dev.js",
+    "build:chromium": "webpack --env browser=chromium --config webpack.config.js",
+    "build:firefox": "webpack --env browser=firefox --config webpack.config.js"
   },
   "eslintConfig": {
     "extends": [

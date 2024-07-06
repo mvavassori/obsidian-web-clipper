@@ -37,9 +37,9 @@ To get a local copy up and running follow these simple steps:
 
 In the project directory, you can run the following scripts:
 
-- `npm run dev`: Runs the webpack in the development mode. The bundle will be automatically rebuilt upon file changes.
+- `npm run dev:chromium` (`npm run dev:firefox` if you're using firefox or one of its derivatives): Runs the webpack in the development mode. The bundle will be automatically rebuilt upon file changes.
 
-- `npm run build`: Runs the webpack in the production mode, creating a bundled output ready for distribution.
+- `npm run build:chromium` (`npm run build:firefox` if you're using firefox or one of its derivatives): Runs the webpack in the production mode, creating a bundled output ready for distribution.
 
 Please note that you will need to have Node.js and npm installed on your machine to run these commands.
 

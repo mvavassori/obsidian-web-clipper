@@ -1,4 +1,4 @@
-/* global chrome */
+/* global browser */
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
@@ -68,7 +68,7 @@ function App() {
       setLoading(true);
       try {
         const tabs = await new Promise((resolve) => {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             resolve(tabs);
           });
         });
@@ -90,9 +90,12 @@ function App() {
       setLoading(true);
       try {
         const result = await new Promise((resolve) => {
-          chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
-            resolve(result);
-          });
+          browser.storage.sync.get(
+            ["obsidianVault", "folderPath"],
+            (result) => {
+              resolve(result);
+            }
+          );
         });
         if (result.obsidianVault) {
           setObsidianVault(result.obsidianVault);
@@ -120,12 +123,50 @@ function App() {
     setHeaderVisible(false);
   };
 
+  // const saveNote = async () => {
+  //   if (!content && !headerVisible) return;
+
+  //   // Redirect to the options page if obsidianVault or folderPath is not set
+  //   if (!obsidianVault || !folderPath) {
+  //     browser.runtime.openOptionsPage();
+  //     return;
+  //   }
+
+  //   // Prepend the page link and an empty row to the content, if the header is visible
+  //   const newContent = headerVisible
+  //     ? content
+  //       ? `${pageInfo.url}\n\n${content}`
+  //       : pageInfo.url
+  //     : content;
+
+  //   // Replace {title} with the sanitized page title in the folderPath
+  //   const sanitizedTitle = sanitizeTitle(title);
+  //   console.log(sanitizedTitle);
+  //   const finalFolderPath = folderPath.replace("{title}", sanitizedTitle);
+
+  //   try {
+  //     // Generate the Obsidian URI
+  //     const obsidianUri = `obsidian://new?vault=${encodeURIComponent(
+  //       obsidianVault
+  //     )}&file=${encodeURIComponent(
+  //       finalFolderPath
+  //     )}&content=${encodeURIComponent(newContent)}`;
+
+  //     // Open the URI in a new tab
+  //     window.open(obsidianUri, "_blank");
+  //     setTitle("");
+  //     setContent("");
+  //   } catch (error) {
+  //     console.error("Error adding note: ", error);
+  //   }
+  // };
+
   const saveNote = async () => {
     if (!content && !headerVisible) return;
 
     // Redirect to the options page if obsidianVault or folderPath is not set
     if (!obsidianVault || !folderPath) {
-      chrome.runtime.openOptionsPage();
+      browser.runtime.openOptionsPage();
       return;
     }
 
@@ -149,8 +190,12 @@ function App() {
         finalFolderPath
       )}&content=${encodeURIComponent(newContent)}`;
 
-      // Open the URI in a new tab
-      window.open(obsidianUri, "_blank");
+      // Open the URI in a new tab using the Firefox API
+      browser.tabs.create({ url: obsidianUri, active: false }, (tab) => {
+        // Close the blank page
+        browser.tabs.remove(tab.id);
+      });
+
       setTitle("");
       setContent("");
     } catch (error) {
@@ -188,22 +233,26 @@ function App() {
   };
 
   const donateRedirect = () => {
-    chrome.tabs.create({
+    browser.tabs.create({
       url: "https://www.paypal.com/donate/?hosted_button_id=M8RTMTXKV46EC",
     });
   };
 
   const optionsRedirect = () => {
-    chrome.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage();
   };
 
   return (
     <div
       ref={containerRef}
       className="relative max-w-lg mx-auto border-2 border-zinc-700 shadow-xl bg-zinc-50"
+      style={{ borderRadius: "0.5rem" }}
     >
       {headerVisible && (
-        <div className="flex justify-between mb-1 border-b-2 border-zinc-700 bg-zinc-100">
+        <div
+          className="flex justify-between mb-1 border-b-2 border-zinc-700 bg-zinc-100 rounded-t-lg"
+          style={{ borderRadius: "0.5rem" }}
+        >
           <div className="text-xs p-2 truncate">{pageInfo.url}</div>
           <button
             ref={removeLinkButtonRef}
@@ -291,7 +340,7 @@ function App() {
         ref={textAreaRef}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="w-full p-2 focus:border-none focus:ring-0 textarea-content resize-none font-semibold bg-zinc-50 text-sm"
+        className="w-full p-2 focus:border-none focus:ring-0 textarea-content resize-none font-normal bg-zinc-50 text-sm"
         placeholder="Take a brief note..."
         minRows={4}
         autoComplete="no-autocomplete-please"
@@ -327,13 +376,13 @@ function App() {
               className="fixed bottom-11 left-1 bg-zinc-200 rounded-md shadow-lg"
             >
               <button
-                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md"
+                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md text-xs"
                 onClick={optionsRedirect}
               >
                 Options
               </button>
               <button
-                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md"
+                className="block w-full text-left py-2 px-2 hover:bg-zinc-300 active:bg-zinc-400 rounded-md text-xs"
                 onClick={donateRedirect}
               >
                 Donate
