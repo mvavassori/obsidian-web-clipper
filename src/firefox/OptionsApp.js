@@ -45,7 +45,7 @@ const OptionsApp = () => {
     // const folderPattern = /^([\p{L}\p{Script=Hani}\s().\-_!@#$%^&()+={}[\];',~]+\/)*\{title\}$/u;
     // const folderPattern = /^(([\p{L}\p{Script=Hani}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
     const folderPattern =
-      /^(([\p{L}\p{Script=Hani}\p{Emoji}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\p{Emoji}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
+      /^(([\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
 
     if (!folderPattern.test(folder.trim())) {
       alert(
