@@ -51,6 +51,8 @@ Here are some features and improvements that are planned for future updates of O
 
 - [ ] **Markdown Preview in Popup:** Enable a markdown preview feature directly within the extension popup, allowing users to preview the rendered markdown of their notes before saving them to their Obsidian vaults.
 
+- [ ] **Custom Standard Note Content** Add form to let users decide how and what to save to the note's content (timestamps, title, link, etc...).
+
 Please note that the roadmap is subject to change and these features are not yet implemented. However, they represent the direction and potential enhancements for future versions of Obsidian Web Clipper.
 
 ## Support
