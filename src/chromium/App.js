@@ -16,6 +16,7 @@ function App() {
 
   const [obsidianVault, setObsidianVault] = useState(null);
   const [folderPath, setFolderPath] = useState(null);
+  const [noteContentFormat, setNoteContentFormat] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -90,15 +91,24 @@ function App() {
       setLoading(true);
       try {
         const result = await new Promise((resolve) => {
-          chrome.storage.sync.get(["obsidianVault", "folderPath"], (result) => {
-            resolve(result);
-          });
+          chrome.storage.sync.get(
+            ["obsidianVault", "folderPath", "noteContentFormat"],
+            (result) => {
+              resolve(result);
+            }
+          );
         });
         if (result.obsidianVault) {
           setObsidianVault(result.obsidianVault);
         }
         if (result.folderPath) {
           setFolderPath(result.folderPath);
+        }
+        if (result.noteContentFormat) {
+          setNoteContentFormat(result.noteContentFormat);
+        } else {
+          // Set default note format if not found in storage
+          setNoteContentFormat("{url}\n\n{content}");
         }
       } catch (error) {
         console.error("Error loading settings: ", error);
@@ -116,29 +126,48 @@ function App() {
     </div>;
   }
 
-  const handleRemoveLink = () => {
-    setHeaderVisible(false);
-  };
-
   const saveNote = async () => {
-    if (!content && !headerVisible) return;
-
     // Redirect to the options page if obsidianVault or folderPath is not set
     if (!obsidianVault || !folderPath) {
       chrome.runtime.openOptionsPage();
       return;
     }
 
-    // Prepend the page link and an empty row to the content, if the header is visible
-    const newContent = headerVisible
-      ? content
-        ? `${pageInfo.url}\n\n${content}`
-        : pageInfo.url
-      : content;
+    if (title.length > 50) {
+      setErrorMsg("Title is too long");
+      return;
+    }
+
+    // Format the note content using the custom note format
+    const date = new Date().toISOString().split("T")[0];
+    let newContent = noteContentFormat
+      .replace("{url}", headerVisible ? pageInfo.url : "")
+      .replace("{title}", title)
+      .replace("{content}", content)
+      .replace("{date}", date);
+
+    // Remove only the empty line that would have contained the URL if not visible
+    if (!headerVisible) {
+      const lines = newContent.split("\n");
+      const urlIndex = lines.findIndex((line) => line.trim() === "");
+      if (urlIndex !== -1) {
+        lines.splice(urlIndex, 1);
+      }
+      newContent = lines.join("\n");
+    }
+
+    // Remove the line for content if it's empty
+    if (content.trim() === "") {
+      const lines = newContent.split("\n");
+      const contentIndex = lines.findIndex((line) => line.trim() === "");
+      if (contentIndex !== -1) {
+        lines.splice(contentIndex, 1);
+      }
+      newContent = lines.join("\n");
+    }
 
     // Replace {title} with the sanitized page title in the folderPath
     const sanitizedTitle = sanitizeTitle(title);
-    console.log(sanitizedTitle);
     const finalFolderPath = folderPath.replace("{title}", sanitizedTitle);
 
     try {
@@ -181,6 +210,8 @@ function App() {
       setErrorMsg(
         'The title contains invalid characters. Please avoid using these characters in the title: \\ : * ? " < > | /'
       );
+    } else if (sanitizedValue.length > 50) {
+      setErrorMsg("The title is too long");
     } else {
       setErrorMsg("");
     }
@@ -208,7 +239,7 @@ function App() {
           <button
             ref={removeLinkButtonRef}
             className="text-black rounded-full p-1 hover:bg-zinc-200 active:bg-zinc-300 relative"
-            onClick={handleRemoveLink}
+            onClick={() => setHeaderVisible(false)}
             onMouseEnter={() => setShowRemoveLinkTooltip(true)}
             onMouseLeave={() => setShowRemoveLinkTooltip(false)}
           >

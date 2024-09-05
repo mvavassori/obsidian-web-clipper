@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Obsidian Web Clipper",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "A clipping extension to create notes in Obsidian.",
   "icons": {
     "48": "logo48.png",
