@@ -266,8 +266,8 @@ const OptionsApp = () => {
           onChange={(e) => setFolder(e.target.value)}
         />
       </div>
-      <div className="mt-8">
-        <label className="flex items-center text-white text-lg">
+      <div className="mt-8 bg-red-950 p-4 rounded-md flex items-center justify-between text-white">
+        <label className="text-lg">
           <input
             type="checkbox"
             className="mr-2"
@@ -276,33 +276,24 @@ const OptionsApp = () => {
           />
           Enable Advanced Note Content Formatting
         </label>
+        {/* `New` svg icon */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M20 4c1.11 0 2 .89 2 2v12c0 1.11-.89 2-2 2H4c-1.11 0-2-.89-2-2V6c0-1.11.89-2 2-2zM8.5 15V9H7.25v3.5L4.75 9H3.5v6h1.25v-3.5L7.3 15zm5-4.74V9h-4v6h4v-1.25H11v-1.11h2.5v-1.26H11v-1.12zm7 3.74V9h-1.25v4.5h-1.12V10h-1.25v3.5h-1.13V9H14.5v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1"
+          />
+        </svg>
       </div>
       {showAdvancedFeatures && (
         <div className="my-4">
-          <div className="text-gray-500 text-base">
-            The available properties are{" "}
-            <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
-              {"{title}"}
-            </span>
-            ,{" "}
-            <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
-              {"{url}"}
-            </span>
-            ,{" "}
-            <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
-              {"{date}"}
-            </span>
-            , and{" "}
-            <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
-              {"{content}"}
-            </span>
-            . You can use any combination of these properties in your note
-            content format.
-          </div>
-
           <div
             className="flex mt-2 text-gray-500 text-base"
-            style={{ gap: "16px" }}
+            style={{ gap: "16px", marginBottom: "16px" }}
           >
             <div className="w-1/2 rounded-md">
               <p className="text-gray-400">Example with default format:</p>
@@ -329,9 +320,39 @@ date: {date}
               </div>
             </div>
           </div>
-
+          <div className="text-xs mb-4">
+            <span className="text-gray-400 bg-zinc-700 p-1 rounded-md">
+              If you're confused just copy either the default format or the
+              frontmatter format and paste it in the text box below. Then click
+              the "Test Settings" button to see how it looks.
+            </span>
+          </div>
+          <label className="text-white text-lg mt-6">
+            Note Content Format{" "}
+            <span className="text-gray-500 text-base">
+              ( The available properties are{" "}
+              <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
+                {"{title}"}
+              </span>{" "}
+              (that is the tab page title),{" "}
+              <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
+                {"{url}"}
+              </span>
+              ,{" "}
+              <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
+                {"{date}"}
+              </span>
+              , and{" "}
+              <span className="bg-zinc-700 text-gray-400 px-0-5 rounded-md">
+                {"{content}"}
+              </span>{" "}
+              (that is the note's content you write in the extension popup). You
+              can use any combination of these properties in your note content
+              format. )
+            </span>
+          </label>
           <textarea
-            className="w-full px-4 py-2 mt-8 rounded-md bg-zinc-700 text-white text-lg"
+            className="w-full px-4 py-2 mt-2 rounded-md bg-zinc-700 text-white text-lg"
             rows="5"
             value={noteContentFormat}
             onChange={(e) => setNoteContentFormat(e.target.value)}
