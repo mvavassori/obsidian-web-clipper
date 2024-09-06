@@ -133,7 +133,7 @@ function App() {
       return;
     }
 
-    if (title.length > 252) {
+    if (title.length > 250) {
       setErrorMsg("Title is too long");
       return;
     }
@@ -210,7 +210,7 @@ function App() {
       setErrorMsg(
         'The title contains invalid characters. Please avoid using these characters in the title: \\ : * ? " < > | /'
       );
-    } else if (sanitizedValue.length > 252) {
+    } else if (sanitizedValue.length > 250) {
       setErrorMsg("The title is too long");
     } else {
       setErrorMsg("");
@@ -282,7 +282,7 @@ function App() {
           className="w-full p-2 mb-0 focus:border-none focus:ring-0 textarea-title font-semibold bg-zinc-50 text-base"
           placeholder="Add title"
           autoComplete="no-autocomplete-please"
-          maxLength={252}
+          maxLength={250}
           onFocus={() => {
             setIsTitleInFocus(true);
             setShowEditTitleIcon(false);
