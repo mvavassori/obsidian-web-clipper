@@ -139,7 +139,7 @@ function App() {
     }
 
     // Format the note content using the custom note format
-    const date = new Date().toISOString().split("T")[0];
+    const date = new Date().toLocaleDateString("en-CA");
     let newContent = noteContentFormat
       .replace("{url}", headerVisible ? pageInfo.url : "")
       .replace("{title}", title)
