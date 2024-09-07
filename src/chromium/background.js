@@ -4,7 +4,4 @@ chrome.runtime.onInstalled.addListener(function (details) {
     // Redirect to the options page
     chrome.runtime.openOptionsPage();
   }
-  if (details.reason === "update") {
-    chrome.runtime.openOptionsPage();
-  }
 });
