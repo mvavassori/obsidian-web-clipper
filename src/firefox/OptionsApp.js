@@ -71,8 +71,11 @@ const OptionsApp = () => {
     // const folderPattern = /^([\p{L}\p{Script=Hani}\s().]+\/)*\{title\}$/u;
     // const folderPattern = /^([\p{L}\p{Script=Hani}\s().\-_!@#$%^&()+={}[\];',~]+\/)*\{title\}$/u;
     // const folderPattern = /^(([\p{L}\p{Script=Hani}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
+    // const folderPattern =
+    //   /^(([\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
+
     const folderPattern =
-      /^(([\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
+      /^(([\p{L}\p{N}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{N}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
 
     if (!folderPattern.test(folder.trim())) {
       alert(
@@ -163,7 +166,7 @@ const OptionsApp = () => {
     }
 
     const folderPattern =
-      /^(([\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
+      /^(([\p{L}\p{N}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s()\-_!@#$%^&()+={}[\];',~][\p{L}\p{N}\p{Script=Hani}\p{Extended_Pictographic}[\p{Emoji_Modifier}\p{M}\s().\-_!@#$%^&()+={}[\];',~]*\/)*\{title\})$/u;
 
     if (!folderPattern.test(folder.trim())) {
       alert(
@@ -192,7 +195,9 @@ const OptionsApp = () => {
 
   return (
     <div className="bg-zinc-800 px-32 py-8 min-h-screen">
-      <h1 className="text-6xl font-bold text-white">Obsidian Web Clipper</h1>
+      <h1 className="text-6xl font-bold text-white">
+        Obsidian Web Clipper test
+      </h1>
       <p className="text-gray-400 mt-8 text-xl">
         This is an unofficial web clipper for Obsidian that allows you to easily
         create notes within a popup and save them directly to your Obsidian
